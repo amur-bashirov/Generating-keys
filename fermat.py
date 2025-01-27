@@ -55,15 +55,15 @@ def fermat(N: int, k: int) -> str:
 def miller_rabin(N: int, k: int) -> str:
     if fermat(N,k) == "composite":
         return "composite"
-    z = 1  # Start with the identity for multiplication
-    y = N - 1  # Start with the initial power
-    a = random.randint(2, N - 1)  # Pick a random base a
-    while mod_exp(a,y,N)==1 and y > 0:
-        z = mod_exp(a,y,N)
-        if y % 2 == 1:  # If y is odd
-            y = y - 1 
-            a= a*a
-        y = y//2
+    z = 1
+    y = N - 1
+    a = random.randint(2, N - 1)
+    while True:
+        if mod_exp(a,y,N)==1 and y > 0:
+            z = mod_exp(a,y,N)
+            y = y//2
+        else:
+            break
     if z == N-1:
         return "prime"
     else:
