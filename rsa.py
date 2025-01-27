@@ -2,7 +2,7 @@ import random
 import sys
 
 # This may come in handy...
-from fermat import miller_rabin
+from fermat import miller_rabin, mod_exp
 
 # If you use a recursive implementation of `mod_exp` or extended-euclid,
 # you recurse once for every bit in the number.
@@ -44,6 +44,19 @@ def generate_large_prime(bits=512) -> int:
       # Guaranteed random prime number obtained through fair dice roll
 
 
+def Euclid(a, b):
+    if b==0:
+        return a
+    return Euclid(b, a % b)
+
+
+def Finde(E,p,q):
+    for e in E:
+        if Euclid(e,(p-1)(q-1)) ==1:
+            return e
+
+
+
 # Implement this function
 def generate_key_pairs(bits: int) -> tuple[int, int, int]:
     """
@@ -52,4 +65,16 @@ def generate_key_pairs(bits: int) -> tuple[int, int, int]:
     - N must be the product of two random prime numbers p and q
     - e and d must be multiplicative inverses mod (p-1)(q-1)
     """
+
+    p = generate_large_prime(bits)
+    q = 0
+    while True:
+        q = generate_large_prime(bits)
+        if q != p:
+            break
+
+
+    e = Finde(primes,p,q)
+
+
     return 0, 0, 0
