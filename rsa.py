@@ -27,7 +27,11 @@ def ext_euclid(a: int, b: int) -> tuple[int, int, int]:
 
     Note: a must be greater than b
     """
-    return 0, 0, 0
+    if b==0:
+        return (1,0,a)
+    x,y,z = ext_euclid(b, a % b)
+    fake_x = (a//b)*y
+    return (y,x-fake_x,z)
 
 
 # Implement this function
@@ -54,6 +58,7 @@ def Finde(E,p,q):
     for e in E:
         if Euclid(e,(p-1)(q-1)) ==1:
             return e
+    raise Exception("provided primes for e did not work for find relitively prime e")
 
 
 
@@ -76,5 +81,6 @@ def generate_key_pairs(bits: int) -> tuple[int, int, int]:
 
     e = Finde(primes,p,q)
 
-
+    x,y , gcd = ext_euclid(e,(p-1)*(q-1))
+    d = x % (p-1)*(q-1)
     return 0, 0, 0
