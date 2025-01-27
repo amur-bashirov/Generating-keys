@@ -52,22 +52,51 @@ def fermat(N: int, k: int) -> str:
 # To generate random values for a, you will most likely want to use
 # random.randint(low, hi) which gives a random integer between low and
 # hi, inclusive.
+
+
+def decompose(N):
+    s =0
+    d= N-1
+    while d%2==0:
+        d//=2
+        s+=1
+    return s,d
+
+
 def miller_rabin(N: int, k: int) -> str:
+    if N <= 1:
+        return "composite"
+    if N == 2:
+        return "prime"
+    if N % 2 == 0:
+        return "composite"
+
     if fermat(N,k) == "composite":
         return "composite"
-    z = 1
-    y = N - 1
-    a = random.randint(2, N - 1)
-    while True:
-        if mod_exp(a,y,N)==1 and y > 0:
-            z = mod_exp(a,y,N)
-            y = y//2
-        else:
+
+
+
+    a = random.randint(2,N-1)
+    y=N-1
+    z=0
+    s, d = decompose(N)
+    for i in range(s - 1, 0, -1):
+        if y%2!= 0:
+            return "composite"
+        if i == s-1:
+            z = mod_exp(a, y*2 ,N)
+
+        z = mod_exp(z, y//2, N)
+        if z == N - 1:
             break
-    if z == N-1:
-        return "prime"
-    else:
-        return "composite"
+        elif z == 1:
+            continue
+        else:
+            return "composite"
+
+    return "prime"
+
+
 
 
 def main(number: int, k: int):
