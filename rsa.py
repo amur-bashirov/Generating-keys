@@ -37,7 +37,11 @@ def generate_large_prime(bits=512) -> int:
     Use random.getrandbits(bits) to generate a random number of the
      specified bit length.
     """
-    return 5  # Guaranteed random prime number obtained through fair dice roll
+    while True:
+        num = random.getrandbits(bits)
+        if miller_rabin(num, 100):
+            return num
+      # Guaranteed random prime number obtained through fair dice roll
 
 
 # Implement this function
