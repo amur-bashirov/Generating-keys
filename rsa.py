@@ -48,16 +48,25 @@ def generate_large_prime(bits=512) -> int:
 
 
 def Euclid(a, b):
-    if b==0:
-        return a
-    return Euclid(b, a % b)
+    while b != 0:
+        a, b = b, a % b
+    return a
 
 
-def Finde(E,p,q):
+def Finde(E, p, q):
+    """
+    Find an encryption exponent e from the list E that is
+    relatively prime to (p-1)*(q-1) and greater than 2.
+    """
+    phi_n = (p - 1) * (q - 1)
     for e in E:
-        if Euclid(e,(p-1)*(q-1)) ==1:
+        gcd = Euclid(e, phi_n)
+        print(f"Testing e={e}, phi(N)={phi_n}, GCD={gcd}")
+        if gcd == 1 and e > 2:
             return e
-    raise Exception("provided primes for e did not work for find relitively prime e")
+    raise Exception("Provided primes for e did not work to find a valid relatively prime e")
+
+
 
 
 
@@ -77,9 +86,15 @@ def generate_key_pairs(bits: int) -> tuple[int, int, int]:
         if q != p:
             break
     N=p*q
+    assert N.bit_length() >= bits, f"N is too small: {N.bit_length()} bits (expected >= {bits})"
 
     e = Finde(primes,p,q)
 
     x,y , gcd = ext_euclid(e,(p-1)*(q-1))
-    d = x % (p-1)*(q-1)
+    if gcd != 1:
+        raise Exception("e and phi(N) are not coprime, modular inverse cannot be computed")
+    d = x % ((p-1)*(q-1))
+    if d < 0:
+        d += ((p-1)*(q-1))
+    print(f"p={p}, q={q}, N={N}, e={e}, d={d}, gcd={gcd}")
     return N,e,d
