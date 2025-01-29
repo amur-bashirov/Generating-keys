@@ -42,7 +42,7 @@ def generate_large_prime(bits=512) -> int:
     """
     while True:
         num = random.getrandbits(bits)
-        if miller_rabin(num, 100):
+        if miller_rabin(num, 100) == "prime":
             return num
       # Guaranteed random prime number obtained through fair dice roll
 
@@ -90,10 +90,10 @@ def generate_key_pairs(bits: int) -> tuple[int, int, int]:
 
     e = Finde(primes,p,q)
 
-    x,y , gcd = ext_euclid(e,(p-1)*(q-1))
+    d,_ , gcd = ext_euclid(e,(p-1)*(q-1))
     if gcd != 1:
         raise Exception("e and phi(N) are not coprime, modular inverse cannot be computed")
-    d = x % ((p-1)*(q-1))
+   
     if d < 0:
         d += ((p-1)*(q-1))
     print(f"p={p}, q={q}, N={N}, e={e}, d={d}, gcd={gcd}")
